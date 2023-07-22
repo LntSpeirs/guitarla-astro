@@ -1,0 +1,26 @@
+---
+import Layout from "../../layouts/Layout.astro";
+
+//En routing dinamico de Astro hay que usar esta funcion que devuelva un array
+export async function getStaticPaths() {
+  const url = `${import.meta.env.PUBLIC_API_URL}/guitarras?populate=imagen`;
+  const respuesta = await fetch(url);
+  const { data } = await respuesta.json();
+  return data.map((guitarra) => ({
+    params: {
+      id: guitarra.attributes.url,
+    },
+    props: {
+      guitarra: guitarra.attributes,
+    },
+  }));
+}
+console.log(Astro.params);
+console.log(Astro.props);
+---
+
+<Layout title="Inicio" description="Pagina de guitarras y demas">
+  <main class="contenedor">
+    <h1 class="heading">Routing dinamico</h1>
+  </main>
+</Layout>

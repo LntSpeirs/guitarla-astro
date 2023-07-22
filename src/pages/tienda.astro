@@ -5,7 +5,7 @@ import Guitarra from "../components/Guitarra.astro";
 const url = `${import.meta.env.PUBLIC_API_URL}/guitarras?populate=imagen`;
 const respuesta = await fetch(url);
 const { data } = await respuesta.json();
-console.log({ data }); // [{ id, name }]
+//console.log({ data }); // [{ id, name }]
 ---
 
 <Layout title="Tienda" description="Pagina de guitarras y demas">
