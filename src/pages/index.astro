@@ -2,6 +2,8 @@
 import Guitarra from "../components/Guitarra.astro";
 import Post from "../components/Post.astro";
 import Layout from "../layouts/Layout.astro";
+import Curso from "../components/Curso.astro";
+import ComponenteReact from "../components/ComponenteReact.jsx";
 
 const urlGuitarras = `${
   import.meta.env.PUBLIC_API_URL
@@ -9,18 +11,20 @@ const urlGuitarras = `${
 
 const urlBlog = `${import.meta.env.PUBLIC_API_URL}/posts?populate=imagen`;
 
-const [resGuitarras, resBlog] = await Promise.all([
+const urlCurso = `${import.meta.env.PUBLIC_API_URL}/curso?populate=imagen`;
+
+const [resGuitarras, resBlog, resCurso] = await Promise.all([
   fetch(urlGuitarras),
   fetch(urlBlog),
+  fetch(urlCurso),
 ]);
 
-const [{ data: guitarras }, { data: posts }] = await Promise.all([
-  resGuitarras.json(),
-  resBlog.json(),
-]);
+const [{ data: guitarras }, { data: posts }, { data: curso }] =
+  await Promise.all([resGuitarras.json(), resBlog.json(), resCurso.json()]);
 
-console.log(guitarras);
-console.log(posts);
+//console.log(guitarras);
+//console.log(posts);
+//console.log(curso);
 ---
 
 <Layout title="Inicio" description="Pagina de guitarras y demas">
@@ -42,6 +46,12 @@ console.log(posts);
       }
     </div>
   </main>
+  <Curso
+    titulo={curso.attributes.titulo}
+    contenido={curso.attributes.contenido}
+    imagen={curso.attributes.imagen.data.attributes.url}
+  />
+  <ComponenteReact client:load />
   <section class="contenedor">
     <h2 class="heading">Blog</h2>
     <div class="grid">
