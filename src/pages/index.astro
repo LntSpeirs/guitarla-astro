@@ -1,16 +1,26 @@
 ---
 import Guitarra from "../components/Guitarra.astro";
+import Post from "../components/Post.astro";
 import Layout from "../layouts/Layout.astro";
 
 const urlGuitarras = `${
   import.meta.env.PUBLIC_API_URL
 }/guitarras?populate=imagen`;
 
-const [resGuitarras] = await Promise.all([fetch(urlGuitarras)]);
+const urlBlog = `${import.meta.env.PUBLIC_API_URL}/posts?populate=imagen`;
 
-const [{ data: guitarras }] = await Promise.all([resGuitarras.json()]);
+const [resGuitarras, resBlog] = await Promise.all([
+  fetch(urlGuitarras),
+  fetch(urlBlog),
+]);
+
+const [{ data: guitarras }, { data: posts }] = await Promise.all([
+  resGuitarras.json(),
+  resBlog.json(),
+]);
 
 console.log(guitarras);
+console.log(posts);
 ---
 
 <Layout title="Inicio" description="Pagina de guitarras y demas">
@@ -32,6 +42,22 @@ console.log(guitarras);
       }
     </div>
   </main>
+  <section class="contenedor">
+    <h2 class="heading">Blog</h2>
+    <div class="grid">
+      {
+        posts?.map((post) => (
+          <Post
+            titulo={post.attributes.titulo}
+            contenido={post.attributes.contenido}
+            publishedAt={post.attributes.publishedAt}
+            imagen={post.attributes.imagen.data.attributes.formats.medium.url}
+            url={post.attributes.url}
+          />
+        ))
+      }
+    </div>
+  </section>
 </Layout>
 
 <style></style>
